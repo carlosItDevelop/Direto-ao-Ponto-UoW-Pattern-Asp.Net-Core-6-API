@@ -1,4 +1,4 @@
-# SmartAdmin for .NET Core
+# Direto ao Ponto - UoW, API in .Net Core 6
 
 ## Changelog
 
