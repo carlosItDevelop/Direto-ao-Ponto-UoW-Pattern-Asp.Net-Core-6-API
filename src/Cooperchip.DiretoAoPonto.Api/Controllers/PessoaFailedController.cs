@@ -77,7 +77,10 @@ namespace Cooperchip.DiretoAoPonto.Uow.Controllers
                     Nome = pessoaModel.Nome,
                     Id = pessoaModel.Id
                 };
-                return CreatedAtAction("AdicionarPassageiro", pessoaDto);
+                
+                
+                //return Ok(pessoaDto); ===>>> Aqui estamos deixando de cumprir o padrão RESTFul
+                return CreatedAtAction(nameof(AdicionarPassageiro), pessoaDto);
             }
             catch (Exception ex)
             {

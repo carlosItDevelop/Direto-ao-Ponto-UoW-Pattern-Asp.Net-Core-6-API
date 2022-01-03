@@ -9,14 +9,16 @@ namespace Cooperchip.DiretoAoPonto.Data.Mapping
         public void Configure(EntityTypeBuilder<Pessoa> builder)
         {
             builder.HasKey(pk => pk.Id);
-            builder.Property(n => n.Nome).HasMaxLength(50)
+            builder.Property(n => n.Nome)
+                .HasMaxLength(50)
+                .HasColumnType("varchar")
                 .IsRequired();
 
             builder.Property(pk => pk.VooId)
                 .IsRequired();
 
 
-            //builder.HasOne(x => x.Voo).WithMany(x => x.Pessoas).HasForeignKey(x => x.VooId);
+            builder.HasOne(x => x.Voo).WithMany(x => x.Pessoas).HasForeignKey(x => x.VooId);
         }
     }
 }

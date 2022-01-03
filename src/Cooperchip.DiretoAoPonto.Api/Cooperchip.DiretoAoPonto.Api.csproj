@@ -22,4 +22,8 @@
     <ProjectReference Include="..\Cooperchip.DiretoAoPonto.Domain\Cooperchip.DiretoAoPonto.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Mapper\" />
+  </ItemGroup>
+
 </Project>
