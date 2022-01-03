@@ -1,4 +1,4 @@
-﻿using Cooperchip.DiretoAoPonto.Data.Repositories.Abstractions;
+﻿using Cooperchip.DiretoAoPonto.Data.FailedRepository.Abstraction;
 using Cooperchip.DiretoAoPonto.Domain.Entities;
 using Cooperchip.DiretoAoPonto.Uow.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -8,14 +8,14 @@ namespace Cooperchip.DiretoAoPonto.Uow.Controllers
     [ApiController]
     //[Route("[Controller]")]
     [Route("api/pessoa")]
-    public class PessoaController : Controller
+    public class PessoaFailedController : Controller
     {
 
-        private readonly IPessoaRepository _pessoaRepo;
-        private readonly IVooRepository _vooRepo;
+        private readonly IPessoaFailedRepository _pessoaRepo;
+        private readonly IVooFailedRepository _vooRepo;
 
-        public PessoaController(IPessoaRepository pessoaRepo,
-                                IVooRepository vooRepo)
+        public PessoaFailedController(IPessoaFailedRepository pessoaRepo,
+                                IVooFailedRepository vooRepo)
         {
             _pessoaRepo = pessoaRepo;
             _vooRepo = vooRepo;
@@ -37,7 +37,6 @@ namespace Cooperchip.DiretoAoPonto.Uow.Controllers
             };
             await _pessoaRepo.AdicionarPessoa(pessoaModel);
             await _vooRepo.DecrementarPessoa(pessoa.VooId);
-            await _pessoaRepo.Commit();
             var pessoaDto = new PessoaDTO
             {
                 VooId = pessoaModel.VooId,
@@ -72,7 +71,6 @@ namespace Cooperchip.DiretoAoPonto.Uow.Controllers
             {
                 await _pessoaRepo.AdicionarPessoa(pessoaModel);
                 await _vooRepo.DecrementarPessoa(pessoa.VooId);
-                await _pessoaRepo.Commit();
                 var pessoaDto = new PessoaDTO
                 {
                     VooId = pessoaModel.VooId,
