@@ -7,7 +7,7 @@ namespace Cooperchip.DiretoAoPonto.Uow.Controllers
 {
     [ApiController]
     //[Route("[Controller]")]
-    [Route("api/pessoa")]
+    [Route("api/pessoafailed")]
     public class PessoaFailedController : Controller
     {
 
