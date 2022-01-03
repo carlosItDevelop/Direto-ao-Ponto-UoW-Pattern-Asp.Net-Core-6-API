@@ -1,4 +1,5 @@
-﻿using Cooperchip.DiretoAoPonto.Uow.Extensions;
+﻿using Cooperchip.DiretoAoPonto.Api.Mapper;
+using Cooperchip.DiretoAoPonto.Uow.Extensions;
 using Microsoft.OpenApi.Models;
 
 namespace Cooperchip.DiretoAoPonto.Uow
@@ -13,6 +14,8 @@ namespace Cooperchip.DiretoAoPonto.Uow
        
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(AutoMapperConfig));
+
             services.AddContexts(Configuration);
             services.AddRepositories();
 
