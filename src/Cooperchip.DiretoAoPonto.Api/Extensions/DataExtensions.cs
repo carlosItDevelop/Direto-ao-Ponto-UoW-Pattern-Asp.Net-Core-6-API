@@ -1,4 +1,5 @@
-﻿using Cooperchip.DiretoAoPonto.Data.Orm;
+﻿using Cooperchip.DiretoAoPonto.Data.FailedRepository.Abstraction;
+using Cooperchip.DiretoAoPonto.Data.Orm;
 using Microsoft.EntityFrameworkCore;
 using UnitOfWorkExample.Data.Repositories;
 
@@ -17,8 +18,8 @@ namespace Cooperchip.DiretoAoPonto.Uow.Extensions
 
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
-            services.AddScoped<IVooRepository, VooRepository>();
-            services.AddScoped<IPessoaRepository, PessoaRepository>();
+            services.AddScoped<IVooFailedRepository, VooRepository>();
+            services.AddScoped<IPessoaFailedRepository, PessoaRepository>();
 
             return services;
         }

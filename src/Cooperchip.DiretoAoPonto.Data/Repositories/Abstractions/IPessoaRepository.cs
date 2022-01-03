@@ -1,7 +1,7 @@
 ﻿using Cooperchip.DiretoAoPonto.Domain.Entities;
 using UnitOfWorkExample.Data.Repositories.Abstractions;
 
-namespace UnitOfWorkExample.Data.Repositories
+namespace Cooperchip.DiretoAoPonto.Data.Repositories.Abstractions
 {
     public interface IPessoaRepository : IUnitOfWork
     {

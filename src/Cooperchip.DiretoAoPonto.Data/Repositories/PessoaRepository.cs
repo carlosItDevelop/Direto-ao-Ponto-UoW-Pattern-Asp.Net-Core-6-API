@@ -1,4 +1,5 @@
 ﻿using Cooperchip.DiretoAoPonto.Data.Orm;
+using Cooperchip.DiretoAoPonto.Data.Repositories.Abstractions;
 using Cooperchip.DiretoAoPonto.Domain.Entities;
 
 namespace UnitOfWorkExample.Data.Repositories

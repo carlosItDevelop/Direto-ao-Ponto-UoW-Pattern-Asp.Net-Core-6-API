@@ -1,7 +1,8 @@
-﻿using Cooperchip.DiretoAoPonto.Domain.Entities;
+﻿using Cooperchip.DiretoAoPonto.Data.FailedRepository.Abstraction;
+using Cooperchip.DiretoAoPonto.Data.Repositories.Abstractions;
+using Cooperchip.DiretoAoPonto.Domain.Entities;
 using Cooperchip.DiretoAoPonto.Uow.Models;
 using Microsoft.AspNetCore.Mvc;
-using UnitOfWorkExample.Data.Repositories;
 
 namespace Cooperchip.DiretoAoPonto.Uow.Controllers
 {
@@ -10,8 +11,10 @@ namespace Cooperchip.DiretoAoPonto.Uow.Controllers
     [Route("api/pessoa")]
     public class PessoaController : Controller
     {
+        private readonly IPessoaFailedRepository _pessoaRepoComErro;
+        private readonly IVooFailedRepository _vooRepoComErro;
 
-        private readonly IPessoaRepository _pessoaRepo;
+        private readonly IPessoadRepository _pessoaRepo;
         private readonly IVooRepository _vooRepo;
 
         public PessoaController(IPessoaRepository pessoaRepo,
@@ -55,11 +58,13 @@ namespace Cooperchip.DiretoAoPonto.Uow.Controllers
         /// <param name="pessoa"></param>
         /// <returns></returns>
         /// <remarks>Esperamos receber um 201 - Creaed - ou um 400 - BadRequest</remarks>
-        [HttpPost("add-pessoa")]
+        [HttpPost("adicionar-passageiro")]
         [ProducesResponseType(typeof(PessoaDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<PessoaDTO>> AddPessoa(PessoaRequest pessoa)
+        public async Task<ActionResult<PessoaDTO>> AdicionarPassageiro(PessoaRequest pessoa)
         {
+            if (!ModelState.IsValid) return BadRequest("O modelo está inválido!");
+
             var pessoaModel = new Pessoa
             {
                 VooId = pessoa.VooId,
@@ -77,7 +82,47 @@ namespace Cooperchip.DiretoAoPonto.Uow.Controllers
                     Nome = pessoaModel.Nome,
                     Id = pessoaModel.Id
                 };
-                return Ok(pessoaDto);
+                return CreatedAtAction("AddPessoa", pessoaDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Aqui parece está tudo bem, mas como não 
+        /// Implementamos o Unit Of Work Pattern há 
+        /// um erro grave de Consistência em nosso modelo de negócio.
+        /// </summary>
+        /// <param name="pessoa"></param>
+        /// <returns></returns>
+        /// <remarks>Esperamos receber um 201 - Creaed - ou um 400 - BadRequest</remarks>
+        [HttpPost("adicionar-com-erro")]
+        [ProducesResponseType(typeof(PessoaDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<PessoaDTO>> AdicionarComErro(PessoaRequest pessoa)
+        {
+            if (!ModelState.IsValid) return BadRequest("O modelo está inválido!");
+
+            var pessoaModel = new Pessoa
+            {
+                VooId = pessoa.VooId,
+                Nome = pessoa.Nome
+            };
+
+            try
+            {
+                await _pessoaRepo.AdicionarPessoa(pessoaModel);
+                await _vooRepo.DecrementarPessoa(pessoa.VooId);
+                await _pessoaRepo.Commit();
+                var pessoaDto = new PessoaDTO
+                {
+                    VooId = pessoaModel.VooId,
+                    Nome = pessoaModel.Nome,
+                    Id = pessoaModel.Id
+                };
+                return CreatedAtAction("AdicionarComErro", pessoaDto);
             }
             catch (Exception ex)
             {
