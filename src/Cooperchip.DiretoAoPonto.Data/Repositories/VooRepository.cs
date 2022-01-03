@@ -55,9 +55,9 @@ namespace UnitOfWorkExample.Data.Repositories
 
         public async Task CriarVoo(Voo voo)
         {
-            // Se o Voo já existir não fazer nada, 
-            // caso contrário rodar a linha abaixo!
-            await _context.Set<Voo>().AddAsync(voo);
+            var vooExistente = await _context.Set<Voo>().FindAsync(voo.Id);
+            if(vooExistente == null)
+                    await _context.Set<Voo>().AddAsync(voo);
         }
 
         public async Task<bool> Commit()
