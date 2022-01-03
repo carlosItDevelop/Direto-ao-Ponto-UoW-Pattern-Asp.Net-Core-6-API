@@ -53,6 +53,13 @@ namespace UnitOfWorkExample.Data.Repositories
             await Task.CompletedTask;
         }
 
+        public async Task CriarVoo(Voo voo)
+        {
+            // Se o Voo já existir não fazer nada, 
+            // caso contrário rodar a linha abaixo!
+            await _context.Set<Voo>().AddAsync(voo);
+        }
+
         public async Task<bool> Commit()
         {
             return await _context.SaveChangesAsync() > 0;

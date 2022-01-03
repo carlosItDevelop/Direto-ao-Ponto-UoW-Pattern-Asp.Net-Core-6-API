@@ -1,5 +1,7 @@
-﻿using Cooperchip.DiretoAoPonto.Api.Mapper;
+﻿using Cooperchip.DiretoAoPonto.Api.Configurations.AppSettings;
+using Cooperchip.DiretoAoPonto.Api.Mapper;
 using Cooperchip.DiretoAoPonto.Uow.Extensions;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 namespace Cooperchip.DiretoAoPonto.Uow
@@ -38,6 +40,9 @@ namespace Cooperchip.DiretoAoPonto.Uow
                     }
                 })
             );
+
+            services.Configure<VooSettings>(Configuration.GetSection(VooSettings.SectionName));
+            services.AddSingleton(s => s.GetRequiredService<IOptions<VooSettings>>().Value);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

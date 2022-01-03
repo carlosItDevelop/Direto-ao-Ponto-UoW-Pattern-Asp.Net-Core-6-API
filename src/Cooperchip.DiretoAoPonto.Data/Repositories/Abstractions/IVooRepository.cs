@@ -11,5 +11,6 @@ namespace Cooperchip.DiretoAoPonto.Data.Repositories.Abstractions
         Task UpdateVoo(Voo voo);
         Task<Voo> SelecionarPorId(Guid id);
         Task<IEnumerable<Voo>> SelecionarTodos(Expression<Func<Voo, bool>> quando = null);
+        Task CriarVoo(Voo voo);
     }
 }
