@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Cooperchip.DiretoAoPonto.Data.Repositories.Abstractions;
+﻿using Cooperchip.DiretoAoPonto.Data.Repositories.Abstractions;
 using Cooperchip.DiretoAoPonto.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,23 +9,23 @@ namespace Cooperchip.DiretoAoPonto.Api.Controllers
     public class VooController : Controller
     {
         private readonly IVooRepository _vooRepository;
-        private readonly IMapper _mapper;
+        private readonly IPessoaRepository _pessoaRepository;
 
-        public VooController(IVooRepository vooRepository, 
-                             IMapper mapper)
+        public VooController(IVooRepository vooRepository,
+                             IPessoaRepository pessoaRepository)
         {
             _vooRepository = vooRepository;
-            _mapper = mapper;
+            _pessoaRepository = pessoaRepository;
         }
 
-        [HttpGet("obter-voos")]
-        public async Task<IEnumerable<Voo>> ObterTodos()
+        [HttpGet("listar-voos")]
+        public async Task<IEnumerable<Voo>> ListarTodos()
         {
             return await _vooRepository.SelecionarTodos();
         }
 
         [HttpGet("resetar-voo")]
-        public async Task<IActionResult> EditarVoo(Guid? id)
+        public async Task<IActionResult> ResetarVoo(Guid? id)
         {
             if (id.Value == null)
             {
@@ -43,7 +42,7 @@ namespace Cooperchip.DiretoAoPonto.Api.Controllers
             voo.Id = id.Value;
             voo.Disponibilidade = 4;
 
-
+            await _pessoaRepository.ExcluirPessoasDoVoo(id.Value);
             await _vooRepository.UpdateVoo(voo);
             await _vooRepository.Commit();
 

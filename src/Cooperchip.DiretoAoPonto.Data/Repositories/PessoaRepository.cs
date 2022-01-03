@@ -1,6 +1,7 @@
 ﻿using Cooperchip.DiretoAoPonto.Data.Orm;
 using Cooperchip.DiretoAoPonto.Data.Repositories.Abstractions;
 using Cooperchip.DiretoAoPonto.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace UnitOfWorkExample.Data.Repositories
 {
@@ -17,6 +18,13 @@ namespace UnitOfWorkExample.Data.Repositories
         {
             await _context.Set<Pessoa>().AddAsync(pessoa);
         }
+
+        public async Task ExcluirPessoasDoVoo(Guid vooId)
+        {
+            var p = await _context.Set<Pessoa>().AsNoTracking().Where(x=>x.VooId == vooId).ToListAsync();
+            _context.Set<Pessoa>().RemoveRange(p);
+        }
+
 
         public async Task<bool> Commit()
         {
