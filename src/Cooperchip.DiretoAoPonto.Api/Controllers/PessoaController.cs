@@ -47,7 +47,17 @@ namespace Cooperchip.DiretoAoPonto.Uow.Controllers
             return pessoaDto;
         }
 
+        /// <summary>
+        /// A partir do Asp.Net Core 2.1 não precisamos mais
+        /// informar como receberemos os dados, quando for
+        /// um [FromBody], mas não há problema em passar
+        /// </summary>
+        /// <param name="pessoa"></param>
+        /// <returns></returns>
+        /// <remarks>Esperamos receber um 201 - Creaed - ou um 400 - BadRequest</remarks>
         [HttpPost("add-pessoa")]
+        [ProducesResponseType(typeof(PessoaDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<PessoaDTO>> AddPessoa(PessoaRequest pessoa)
         {
             var pessoaModel = new Pessoa
