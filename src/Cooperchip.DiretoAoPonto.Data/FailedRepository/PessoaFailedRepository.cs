@@ -16,7 +16,6 @@ namespace Cooperchip.DiretoAoPonto.Data.FailedRepository
         public async Task AdicionarPessoa(Pessoa pessoa)
         {
             await _context.Set<Pessoa>().AddAsync(pessoa);
-            //await _context.Pessoa.AddAsync(pessoa);
             await _context.SaveChangesAsync();
         }
 

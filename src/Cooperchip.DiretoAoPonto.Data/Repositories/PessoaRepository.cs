@@ -16,7 +16,6 @@ namespace UnitOfWorkExample.Data.Repositories
         public async Task AdicionarPessoa(Pessoa pessoa)
         {
             await _context.Set<Pessoa>().AddAsync(pessoa);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> Commit()

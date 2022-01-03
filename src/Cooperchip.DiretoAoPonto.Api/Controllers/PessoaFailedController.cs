@@ -1,4 +1,5 @@
-﻿using Cooperchip.DiretoAoPonto.Data.FailedRepository.Abstraction;
+﻿using AutoMapper;
+using Cooperchip.DiretoAoPonto.Data.FailedRepository.Abstraction;
 using Cooperchip.DiretoAoPonto.Domain.Entities;
 using Cooperchip.DiretoAoPonto.Uow.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -13,37 +14,15 @@ namespace Cooperchip.DiretoAoPonto.Uow.Controllers
 
         private readonly IPessoaFailedRepository _pessoaRepo;
         private readonly IVooFailedRepository _vooRepo;
+        private readonly IMapper _mapper;
 
         public PessoaFailedController(IPessoaFailedRepository pessoaRepo,
-                                IVooFailedRepository vooRepo)
+                                      IVooFailedRepository vooRepo, 
+                                      IMapper mapper)
         {
             _pessoaRepo = pessoaRepo;
             _vooRepo = vooRepo;
-        }
-
-        /// <summary>
-        /// Deixando o erro estourar na tela.
-        /// E é gerado um StatusCode 500, o que é um erro.
-        /// </summary>
-        /// <param name="pessoa"></param>
-        /// <returns></returns>
-        [HttpPost("adicionar-pessoa")]
-        public async Task<PessoaDTO> AdicionarPessoa([FromBody] PessoaRequest pessoa)
-        {
-            var pessoaModel = new Pessoa
-            {
-                VooId = pessoa.VooId,
-                Nome = pessoa.Nome
-            };
-            await _pessoaRepo.AdicionarPessoa(pessoaModel);
-            await _vooRepo.DecrementarPessoa(pessoa.VooId);
-            var pessoaDto = new PessoaDTO
-            {
-                VooId = pessoaModel.VooId,
-                Nome = pessoaModel.Nome,
-                Id = pessoaModel.Id
-            };
-            return pessoaDto;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -71,16 +50,9 @@ namespace Cooperchip.DiretoAoPonto.Uow.Controllers
             {
                 await _pessoaRepo.AdicionarPessoa(pessoaModel);
                 await _vooRepo.DecrementarPessoa(pessoa.VooId);
-                var pessoaDto = new PessoaDTO
-                {
-                    VooId = pessoaModel.VooId,
-                    Nome = pessoaModel.Nome,
-                    Id = pessoaModel.Id
-                };
-                
-                
+
                 //return Ok(pessoaDto); ===>>> Aqui estamos deixando de cumprir o padrão RESTFul
-                return CreatedAtAction(nameof(AdicionarPassageiro), pessoaDto);
+                return CreatedAtAction(nameof(AdicionarPassageiro), _mapper.Map<PessoaDTO>(pessoaModel));
             }
             catch (Exception ex)
             {

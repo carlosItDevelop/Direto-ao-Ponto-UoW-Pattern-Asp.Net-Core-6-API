@@ -1,5 +1,8 @@
 ﻿using Cooperchip.DiretoAoPonto.Data.Orm;
 using Cooperchip.DiretoAoPonto.Data.Repositories.Abstractions;
+using Cooperchip.DiretoAoPonto.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace UnitOfWorkExample.Data.Repositories
 {
@@ -17,7 +20,7 @@ namespace UnitOfWorkExample.Data.Repositories
             if(vooId == null)
                 throw new Exception("Id do Voo não pode ser nulo.");
 
-            var voo = await _context.Voo.FindAsync(vooId);
+            var voo = await _context.Set<Voo>().FindAsync(vooId);
 
             if (voo == null)
                 throw new Exception("Voo nao encontrado");
@@ -27,7 +30,27 @@ namespace UnitOfWorkExample.Data.Repositories
 
             voo.DecrementaDisponibilidade();
 
-            _context.Voo.Update(voo);
+            _context.Set<Voo>().Update(voo);
+        }
+
+        public virtual async Task<IEnumerable<Voo>> SelecionarTodos(Expression<Func<Voo, bool>> quando = null)
+        {
+            if (quando == null)
+            {
+                return await _context.Set<Voo>().Include(p=>p.Pessoas).AsNoTracking().ToListAsync();
+            }
+            return await _context.Set<Voo>().Include(p => p.Pessoas).AsNoTracking().Where(quando).ToListAsync();
+        }
+
+        public async Task<Voo> SelecionarPorId(Guid id)
+        {
+            return await _context.Set<Voo>().FindAsync(id);
+        }
+
+        public async Task UpdateVoo(Voo voo)
+        {
+            _context.Set<Voo>().Update(voo);
+            await Task.CompletedTask;
         }
 
         public async Task<bool> Commit()

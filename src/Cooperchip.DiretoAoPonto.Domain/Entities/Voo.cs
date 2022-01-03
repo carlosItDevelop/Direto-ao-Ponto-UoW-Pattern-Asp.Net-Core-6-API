@@ -1,4 +1,5 @@
 ﻿using Cooperchip.DiretoAoPonto.Domain.Entities.Base;
+using System.Text.Json.Serialization;
 
 namespace Cooperchip.DiretoAoPonto.Domain.Entities
 {
@@ -13,7 +14,7 @@ namespace Cooperchip.DiretoAoPonto.Domain.Entities
         public int Disponibilidade { get; set; }
 
         // Ef Relations
-        public IEnumerable<Pessoa>? Pessoas { get; set; }
+        public ICollection<Pessoa>? Pessoas { get; set; }
 
         public void DecrementaDisponibilidade()
         {
