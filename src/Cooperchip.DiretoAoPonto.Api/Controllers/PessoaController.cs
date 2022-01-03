@@ -13,7 +13,7 @@ namespace Cooperchip.DiretoAoPonto.Uow.Controllers
         private readonly IPessoaRepository _pessoaRepo;
         private readonly IVooRepository _vooRepo;
 
-        public PessoaController(IPessoaRepository pessoaRepo, 
+        public PessoaController(IPessoaRepository pessoaRepo,
                                 IVooRepository vooRepo)
         {
             _pessoaRepo = pessoaRepo;
@@ -23,7 +23,6 @@ namespace Cooperchip.DiretoAoPonto.Uow.Controllers
         [HttpPost]
         public async Task<PessoaDTO> AdicionarPessoa([FromBody] PessoaRequest pessoa)
         {
-
             var pessoaModel = new Pessoa
             {
                 VooId = pessoa.VooId,
@@ -31,17 +30,18 @@ namespace Cooperchip.DiretoAoPonto.Uow.Controllers
             };
 
             await _pessoaRepo.AdicionarPessoa(pessoaModel);
-
             await _vooRepo.DecrementarPessoa(pessoa.VooId);
 
             await _pessoaRepo.Commit();
 
-            return new PessoaDTO
+            var pessoaDto = new PessoaDTO
             {
                 VooId = pessoaModel.VooId,
                 Nome = pessoaModel.Nome,
                 Id = pessoaModel.Id
             };
+            return pessoaDto;
+
 
         }
     }

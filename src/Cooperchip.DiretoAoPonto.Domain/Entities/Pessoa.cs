@@ -10,5 +10,7 @@ namespace Cooperchip.DiretoAoPonto.Domain.Entities
         public string? Nome { get; set; }
         public Guid? VooId { get; set; }
         public Voo? Voo { get; set; }
+
     }    
 }
+

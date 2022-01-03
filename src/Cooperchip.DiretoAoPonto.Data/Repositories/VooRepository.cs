@@ -26,10 +26,10 @@ namespace UnitOfWorkExample.Data.Repositories
             if (voo == null)
                 throw new Exception("Voo nao encontrado");
 
-            if (voo.Disponibilidade <= 0)
+            if (!voo.TemDisponibilidade())
                 throw new Exception("Não há mais vagas disponiveis para este Voo.");
 
-            voo.Disponibilidade -= 1;
+            voo.DecrementaDisponibilidade();
 
             _context.Voo.Update(voo);
         }
