@@ -30,6 +30,8 @@ namespace Cooperchip.DiretoAoPonto.Api.Controllers
         }
 
         [HttpGet("resetar-voo")]
+        [ProducesResponseType(typeof(Voo), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ResetarVoo(Guid? id)
         {
             if (id == null) id = Guid.Parse("C05ACEB7-1667-4D8F-BD9E-400984609721");
@@ -45,7 +47,8 @@ namespace Cooperchip.DiretoAoPonto.Api.Controllers
             await _vooRepository.UpdateVoo(voo);
             await _vooRepository.Commit();
 
-            return NoContent();
+            //return NoContent();
+            return Ok(voo);
         }
 
         [HttpPost("criar-voo")]
