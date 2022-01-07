@@ -18,7 +18,7 @@ namespace Cooperchip.DiretoAoPonto.Api.Controllers
         private readonly IMapper _mapper;
 
         public VooController(IVooRepository vooRepository,
-                             IPessoaRepository pessoaRepository, 
+                             IPessoaRepository pessoaRepository,
                              IMapper mapper,
                              IOptions<VooSettings> settings)
         {
@@ -36,25 +36,36 @@ namespace Cooperchip.DiretoAoPonto.Api.Controllers
 
         [HttpGet("resetar-voo")]
         [ProducesResponseType(typeof(Voo), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Voo), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> ResetarVoo(Guid? id)
+        public async Task<IActionResult> ResetarVoo(Guid id)
         {
-            if (id == null) id = Guid.Parse("C05ACEB7-1667-4D8F-BD9E-400984609721");
+            id = Guid.Parse("C05ACEB7-1667-4D8F-BD9E-400984609721");
 
-            var voo = await _vooRepository.SelecionarPorId(id.Value);
+            var voo = await _vooRepository.SelecionarPorId(id);
+            if (voo == null)
+            {
+                var vooDto = new VooDTO
+                {
+                    Id = id,
+                    Disponibilidade = 4,
+                    Capacidade = 4,
+                    Codigo = "101 - Rio/Miami",
+                    Nota = "Saída às 10:34h. Horário de Brasília"
+                };
 
-            if (voo == null) return NotFound("Voo não encontrado ou nulo!");
-
-            voo.Id = id.Value;
-            voo.Disponibilidade = 4;
+                await _vooRepository.CriarVoo(_mapper.Map<Voo>(vooDto));
+                await _vooRepository.Commit();
+                return CreatedAtAction(nameof(ResetarVoo), vooDto);
+            }
+            
+            voo.Id = id;
             voo.Capacidade = 4;
-            voo.Nota = "Saída às 10:34h. Horário de Brasília";
+            voo.Disponibilidade = 4;
 
-            await _pessoaRepository.ExcluirPessoasDoVoo(id.Value);
-            await _vooRepository.UpdateVoo(voo);
+            await _pessoaRepository.ExcluirPessoasDoVoo(id);
+            await _vooRepository.UpdateVoo(_mapper.Map<Voo>(voo));
             await _vooRepository.Commit();
-
-            //return NoContent();
             return Ok(voo);
         }
 

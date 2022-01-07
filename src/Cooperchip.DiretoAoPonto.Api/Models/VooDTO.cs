@@ -16,8 +16,8 @@ namespace Cooperchip.DiretoAoPonto.Api.Models
         [StringLength(100)]
         public string? Nota { get; set; }
 
-        public int Capacidade { get; set; }
-        public int Disponibilidade { get; set; }
+        public int Capacidade { get; set; } = 4;
+        public int Disponibilidade { get; set; } = 4;
 
         //public ICollection<Pessoa>? Pessoas { get; set; }
 

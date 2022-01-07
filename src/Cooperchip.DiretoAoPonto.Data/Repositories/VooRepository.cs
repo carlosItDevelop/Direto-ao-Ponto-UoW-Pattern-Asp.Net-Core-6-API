@@ -44,7 +44,8 @@ namespace UnitOfWorkExample.Data.Repositories
 
         public async Task<Voo> SelecionarPorId(Guid id)
         {
-            return await _context.Set<Voo>().FindAsync(id);
+            var voo = await _context.Set<Voo>().FindAsync(id);
+            return voo;
         }
 
         public async Task UpdateVoo(Voo voo)
