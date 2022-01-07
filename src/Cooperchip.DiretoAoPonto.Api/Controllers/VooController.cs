@@ -1,4 +1,6 @@
-﻿using Cooperchip.DiretoAoPonto.Api.Configurations.AppSettings;
+﻿using AutoMapper;
+using Cooperchip.DiretoAoPonto.Api.Configurations.AppSettings;
+using Cooperchip.DiretoAoPonto.Api.Models;
 using Cooperchip.DiretoAoPonto.Data.Repositories.Abstractions;
 using Cooperchip.DiretoAoPonto.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -13,14 +15,17 @@ namespace Cooperchip.DiretoAoPonto.Api.Controllers
         private readonly IVooRepository _vooRepository;
         private readonly IPessoaRepository _pessoaRepository;
         private readonly VooSettings _settings;
+        private readonly IMapper _mapper;
 
         public VooController(IVooRepository vooRepository,
                              IPessoaRepository pessoaRepository, 
+                             IMapper mapper,
                              IOptions<VooSettings> settings)
         {
             _vooRepository = vooRepository;
             _pessoaRepository = pessoaRepository;
             _settings = settings.Value;
+            _mapper = mapper;
         }
 
         [HttpGet("listar-voos")]
@@ -42,6 +47,8 @@ namespace Cooperchip.DiretoAoPonto.Api.Controllers
 
             voo.Id = id.Value;
             voo.Disponibilidade = 4;
+            voo.Capacidade = 4;
+            voo.Nota = "Saída às 10:34h. Horário de Brasília";
 
             await _pessoaRepository.ExcluirPessoasDoVoo(id.Value);
             await _vooRepository.UpdateVoo(voo);
@@ -51,10 +58,10 @@ namespace Cooperchip.DiretoAoPonto.Api.Controllers
             return Ok(voo);
         }
 
-        [HttpPost("criar-voo")]
+        [HttpPost("criar-voo-appsettings")]
         [ProducesResponseType(typeof(Voo), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Voo>> CriarVoo()
+        public async Task<IActionResult> CriarVooAppSettings()
         {
             var voo = new Voo()
             {
@@ -70,7 +77,29 @@ namespace Cooperchip.DiretoAoPonto.Api.Controllers
             {
                 await _vooRepository.CriarVoo(voo);
                 await _vooRepository.Commit();
-                return CreatedAtAction(nameof(CriarVoo), voo);
+                return CreatedAtAction(nameof(CriarVooAppSettings), voo);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("criar-voo-dto")]
+        [ProducesResponseType(typeof(Voo), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CriarVooDTO(VooDTO vooDto)
+        {
+            if (!ModelState.IsValid) return BadRequest("Modelo DTO Inválido!");
+
+            vooDto.Id = _settings.Id;
+            //vooDto.Pessoas = new List<Pessoa>();
+
+            try
+            {
+                await _vooRepository.CriarVoo(_mapper.Map<Voo>(vooDto));
+                await _vooRepository.Commit();
+                return CreatedAtAction(nameof(CriarVooDTO), vooDto);
             }
             catch (Exception ex)
             {

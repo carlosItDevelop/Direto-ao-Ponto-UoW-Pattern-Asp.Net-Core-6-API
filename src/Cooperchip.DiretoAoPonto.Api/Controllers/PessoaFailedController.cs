@@ -36,7 +36,7 @@ namespace Cooperchip.DiretoAoPonto.Uow.Controllers
         [HttpPost("adicionar-passageiro")]
         [ProducesResponseType(typeof(PessoaDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<PessoaDTO>> AdicionarPassageiro(PessoaRequest pessoa)
+        public async Task<IActionResult> AdicionarPassageiro(PessoaDTO pessoa)
         {
             if (!ModelState.IsValid) return BadRequest("O modelo está inválido!");
 

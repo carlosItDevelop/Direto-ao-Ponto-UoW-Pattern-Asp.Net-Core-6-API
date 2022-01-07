@@ -9,6 +9,7 @@ namespace Cooperchip.DiretoAoPonto.Data.Mapping
         public void Configure(EntityTypeBuilder<Pessoa> builder)
         {
             builder.HasKey(pk => pk.Id);
+
             builder.Property(n => n.Nome)
                 .HasMaxLength(50)
                 .HasColumnType("varchar")

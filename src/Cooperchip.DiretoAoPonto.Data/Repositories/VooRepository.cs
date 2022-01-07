@@ -66,6 +66,14 @@ namespace UnitOfWorkExample.Data.Repositories
         }
         public Task Rollback()
         {
+            /*
+             * Aqui você pode fazer log, avisar a alguém ou algum setor ou processo.
+             * Caso você esteja usando ADO com Transaction ou algo similar, você
+             * poderá executar o RollBack de verdade.
+             * No nosso exemplo, aqui, basta finalizarmos a tarefa e deixar o método
+             * como possibilidade de extensão para outros Devs.
+             */
+
             return Task.CompletedTask;
         }
     }
