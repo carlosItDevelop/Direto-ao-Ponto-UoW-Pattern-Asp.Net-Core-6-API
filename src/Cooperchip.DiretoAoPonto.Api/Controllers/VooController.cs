@@ -35,7 +35,6 @@ namespace Cooperchip.DiretoAoPonto.Api.Controllers
         }
 
         [HttpGet("resetar-voo")]
-        [ProducesResponseType(typeof(Voo), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Voo), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ResetarVoo(Guid id)
