@@ -1,35 +1,34 @@
-﻿using Cooperchip.DiretoAoPonto.Data.FailedRepository.Abstraction;
+﻿using Cooperchip.DiretoAoPonto.Data.FailedRepository;
 using Cooperchip.DiretoAoPonto.Data.Orm;
+using Cooperchip.DiretoAoPonto.Uow.Domain;
 
-namespace Cooperchip.DiretoAoPonto.Data.FailedRepository
+public class VooFailedRepository : IVooFailedRepository
 {
-    public class VooFailedRepository : IVooFailedRepository
+    private readonly UoWDbContext _context;
+
+    public VooFailedRepository(UoWDbContext context)
     {
-        private readonly UowDbContext _context;
+        _context = context;
+    }
 
-        public VooFailedRepository(UowDbContext context)
-        {
-            _context = context;
-        }
+    public async Task DecrementarVaga(Guid? vooId)
+    {
 
-        public async Task DecrementarPessoa(Guid? vooId)
-        {
-            if (vooId == null)
-                throw new Exception("Id do Voo não pode ser nulo.");
+        if (vooId == null)
+            throw new Exception("Id do Voo não pode ser nulo.");
 
-            var voo = await _context.Voo.FindAsync(vooId);
+        var voo = await _context.Voo.FindAsync(vooId);
 
-            if (voo == null)
-                throw new Exception("Voo nao encontrado");
+        if (voo == null)
+            throw new Exception("Voo não encontrado.");
 
-            if (!voo.TemDisponibilidade())
-                throw new Exception("Não há mais vagas disponiveis para este Voo.");
+        if (!voo.TemDisponibilidade())
+            throw new Exception("Não há mais vagas disponível para este voo!");
 
-            voo.DecrementaDisponibilidade();
+        voo.DecremenentaDisponibilidade();
 
-            _context.Voo.Update(voo);
-            _context.SaveChanges();
-        }
+        _context.Set<Voo>().Update(voo);
+        await _context.SaveChangesAsync();
 
     }
 }

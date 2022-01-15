@@ -4,6 +4,7 @@ using Cooperchip.DiretoAoPonto.Data.Orm;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cooperchip.DiretoAoPonto.Data.Migrations
 {
     [DbContext(typeof(UoWDbContext))]
-    partial class UoWDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220107054457_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,7 +43,7 @@ namespace Cooperchip.DiretoAoPonto.Data.Migrations
 
                     b.HasIndex("VooId");
 
-                    b.ToTable("Pessoa");
+                    b.ToTable("Pessoas");
                 });
 
             modelBuilder.Entity("Cooperchip.DiretoAoPonto.Uow.Domain.Voo", b =>
@@ -58,10 +60,11 @@ namespace Cooperchip.DiretoAoPonto.Data.Migrations
                         .HasMaxLength(40)
                         .HasColumnType("varchar(40)");
 
-                    b.Property<int>("Disponibilidade")
+                    b.Property<int>("Disponibidade")
                         .HasColumnType("int");
 
                     b.Property<string>("Nota")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 

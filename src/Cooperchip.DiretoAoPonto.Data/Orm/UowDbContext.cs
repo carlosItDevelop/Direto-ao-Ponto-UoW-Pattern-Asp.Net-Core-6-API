@@ -1,17 +1,18 @@
-﻿using Cooperchip.DiretoAoPonto.Domain.Entities;
+﻿using Cooperchip.DiretoAoPonto.Uow.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cooperchip.DiretoAoPonto.Data.Orm
 {
-    public class UowDbContext : DbContext
+    public class UoWDbContext : DbContext
     {
-        public UowDbContext(){}
+        public UoWDbContext(){}
 
-        public UowDbContext(DbContextOptions<UowDbContext> options) 
-            : base(options){}
+        public UoWDbContext(DbContextOptions<UoWDbContext> options) 
+            : base(options) {}
 
         public DbSet<Pessoa>? Pessoa { get; set; }
         public DbSet<Voo>? Voo { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,13 +26,16 @@ namespace Cooperchip.DiretoAoPonto.Data.Orm
                 property.SetColumnType("varchar(100)");
             }
 
+
             // Todo: Busca os Mapppings de uma vez só
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(UowDbContext).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(UoWDbContext).Assembly);
+
 
             // Todo: remover exclusão em cascata
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())) relationship.DeleteBehavior = DeleteBehavior.ClientNoAction;
 
             base.OnModelCreating(modelBuilder);
         }
+
     }
 }
