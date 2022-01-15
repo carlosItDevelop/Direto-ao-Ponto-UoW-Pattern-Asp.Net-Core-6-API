@@ -2,7 +2,7 @@
 
 ---
 
-### DIRETO ao PONTO é uma série que apresentará aos alunos algumas técnicas de design de software e patterns sem burocracia!
+#### DIRETO ao PONTO é uma série que apresentará aos alunos algumas técnicas de design de software e patterns sem burocracia!
 
 > Curso Direto ao Ponto, mostrando um Caso de Uso interessante, que é o desenvolvimento de uma aplicação Web API em Asp.Net Core 6, para gerenciar as vagas num determinado Voo.A ideia central é utilizar o Unit of Work Pattern, juntamente com o Pattern de Repositório para provar um ponto de falha de design que pode ser desastroso.
 
