@@ -9,8 +9,9 @@ using Microsoft.Extensions.Options;
 namespace Cooperchip.DiretoAoPonto.UoW.Api.Controllers
 {
     [ApiController]
-    [Route("api/voo")]
-    public class VooController : Controller
+    [ApiVersion("1.0", Deprecated = true)]
+    [Route("api/v{version:apiVersion}/voo")]
+    public class VooController : ControllerBase
     {
         private readonly VooSettings _settings;
         private readonly IVooRepository _vooRepository;

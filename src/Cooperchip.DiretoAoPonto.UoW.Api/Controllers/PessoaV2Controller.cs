@@ -8,7 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cooperchip.DiretoAoPonto.UoW.Api.Controllers
 {
     [ApiController]
-    [Route("api/pessoa-v2")]
+    [ApiVersion("1.0", Deprecated = true)]
+    [Route("api/v{version:apiVersion}/pessoa-v2")]
     public class PessoaV2Controller : Controller
     {
         private readonly IUnitOfW _unitoW;

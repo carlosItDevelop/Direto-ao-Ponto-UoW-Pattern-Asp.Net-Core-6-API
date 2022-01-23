@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cooperchip.DiretoAoPonto.UoW.Api.Controllers
 {
     [ApiController]
-    [Route("api/pessoafailed")]
+    [ApiVersion("1.0", Deprecated = true)]
+    [Route("api/v{version:apiVersion}/pessoafailed")]
     public class PessoaFailedController : Controller
     {
 
