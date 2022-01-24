@@ -1,32 +1,27 @@
 ﻿using AutoMapper;
 using Cooperchip.DiretoAoPonto.Data.Repositories.Abstraction;
 using Cooperchip.DiretoAoPonto.Uow.Domain;
-using Cooperchip.DiretoAoPonto.UoW.Api.Configurations.Settings;
+using Cooperchip.DiretoAoPonto.UoW.Api.Controllers;
 using Cooperchip.DiretoAoPonto.UoW.Api.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 
-namespace Cooperchip.DiretoAoPonto.UoW.Api.Controllers
+namespace Cooperchip.DiretoAoPonto.UoW.Api.v3.Controllers
 {
-    [ApiController]
-    [ApiVersion("1.0", Deprecated = true)]
-    [Route("api/v{version:apiVersion}/voo")]
-    public class VooController : ControllerBase
+    [ApiVersion("3.0")]
+    [Route("api/v{version:apiVersion}/voos")]
+    public class VooController : MainController
     {
-        private readonly VooSettings _settings;
         private readonly IVooRepository _vooRepository;
         private readonly IPessoaRepository _pessoaRepository;
         private readonly IMapper _mapper;
 
         public VooController(IVooRepository vooRepository,
                              IPessoaRepository pessoaRepository,
-                             IMapper mapper, 
-                             IOptions<VooSettings> settings)
+                             IMapper mapper)
         {
             _vooRepository = vooRepository;
             _pessoaRepository = pessoaRepository;
             _mapper = mapper;
-            _settings = settings.Value;
         }
 
         [HttpGet("listar-voos")]
@@ -42,7 +37,7 @@ namespace Cooperchip.DiretoAoPonto.UoW.Api.Controllers
         {
             id = Guid.Parse("C05ACEB7-1667-4D8F-BD9E-400984609721");
             var transacao = false;
-            var voo = await _vooRepository.SelecionarPorId(id); 
+            var voo = await _vooRepository.SelecionarPorId(id);
             if (voo == null)
             {
                 var vooDTO = new VooDTO
@@ -61,7 +56,7 @@ namespace Cooperchip.DiretoAoPonto.UoW.Api.Controllers
 
             voo.Id = id;
             voo.Capacidade = 4;
-            voo.Disponibilidade= 4;
+            voo.Disponibilidade = 4;
 
             await _pessoaRepository.ExcluirPessoasDoVoo(id);
             await _vooRepository.UpdateVoo(_mapper.Map<Voo>(voo));
@@ -73,51 +68,23 @@ namespace Cooperchip.DiretoAoPonto.UoW.Api.Controllers
         [HttpPost("criar-voo-dto")]
         [ProducesResponseType(typeof(Voo), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CriarVooDTO(VooDTO vooDto)
+        public async Task<IActionResult> CriarVoo(VooDTO vooDto)
         {
-            if (!ModelState.IsValid) return BadRequest("Modelo DTO Inválido");
+            if (!ModelState.IsValid) return BadRequest("Modelo Inválido");
 
-            vooDto.Id = _settings.Id;
+            vooDto.Id = Guid.Parse("C05ACEB7-1667-4D8F-BD9E-400984609721"); 
 
             try
             {
                 await _vooRepository.CriarVoo(_mapper.Map<Voo>(vooDto));
                 var transacao = await _vooRepository.Commit();
-                return CreatedAtAction(nameof(CriarVooDTO), vooDto);
+                return CreatedAtAction(nameof(CriarVoo), vooDto);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
 
-        }
-
-        [HttpPost("criar-voo-appsettings")]
-        [ProducesResponseType(typeof(Voo), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CriarVooAppSettings()
-        {
-            var voo = new Voo()
-            {
-                Id = _settings.Id,
-                Codigo = _settings.Codigo,
-                Nota = _settings.Nota,
-                Capacidade = _settings.Capacidade,
-                Disponibilidade = _settings.Disponibilidade,
-                Pessoas = new List<Pessoa>()
-            };
-
-            try
-            {
-                await _vooRepository.CriarVoo(voo);
-                var transacao = await _vooRepository.Commit();
-
-                return CreatedAtAction(nameof(CriarVooAppSettings), voo);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
         }
 
 

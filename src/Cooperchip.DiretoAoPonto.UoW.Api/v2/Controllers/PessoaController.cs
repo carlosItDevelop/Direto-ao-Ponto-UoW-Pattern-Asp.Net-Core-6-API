@@ -1,29 +1,30 @@
 ﻿using AutoMapper;
-using Cooperchip.DiretoAoPonto.Data.FailedRepository;
+using Cooperchip.DiretoAoPonto.Data.Repositories.Abstraction;
 using Cooperchip.DiretoAoPonto.Uow.Domain;
+using Cooperchip.DiretoAoPonto.UoW.Api.Controllers;
 using Cooperchip.DiretoAoPonto.UoW.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Cooperchip.DiretoAoPonto.UoW.Api.Controllers
+namespace Cooperchip.DiretoAoPonto.UoW.Api.v2.Controllers
 {
-    [ApiController]
-    [ApiVersion("1.0", Deprecated = true)]
-    [Route("api/v{version:apiVersion}/pessoafailed")]
-    public class PessoaFailedController : Controller
+    [ApiVersion("2.0")]
+    [Route("api/v{version:apiVersion}/pessoas")]
+    public class PessoaController : MainController
     {
 
-        private readonly IPessoaFailedRepository _repoPessoa;
-        private readonly IVooFailedRepository _repoVoo;
+        private readonly IPessoaRepository _repoPessoa;
+        private readonly IVooRepository _repoVoo;
         private readonly IMapper _mapper;
 
-        public PessoaFailedController(IPessoaFailedRepository repoPessoa,
-                                      IVooFailedRepository repoVoo, 
+        public PessoaController(IPessoaRepository repoPessoa,
+                                      IVooRepository repoVoo,
                                       IMapper mapper)
         {
             _repoPessoa = repoPessoa;
             _repoVoo = repoVoo;
             _mapper = mapper;
         }
+
 
         /// <summary>
         /// A partir do Asp.Net Core 2.1 não precisamos mais
@@ -38,12 +39,12 @@ namespace Cooperchip.DiretoAoPonto.UoW.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AdicionarPassageiro(PessoaRequest pessoa)
         {
-            if(!ModelState.IsValid) return BadRequest("O modelo está inválido!");
+            if (!ModelState.IsValid) return BadRequest("O modelo está inválido!");
 
             var pessoaModel = new Pessoa
             {
-                Nome = pessoa.Nome,
-                VooId = pessoa.VooId
+                VooId = pessoa.VooId,
+                Nome = pessoa.Nome
             };
 
             try
@@ -51,6 +52,9 @@ namespace Cooperchip.DiretoAoPonto.UoW.Api.Controllers
                 await _repoPessoa.AdicionarSeAoVoo(pessoaModel);
                 await _repoVoo.DecrementarVaga(pessoa.VooId);
 
+                var transacao = await _repoPessoa.Commit();
+
+                //return Ok(pessoaDto); ===>>> Aqui estamos deixando de cumprir o padrão RESTFul
                 return CreatedAtAction(nameof(AdicionarPassageiro), _mapper.Map<PessoaDTO>(pessoaModel));
 
             }
@@ -58,7 +62,7 @@ namespace Cooperchip.DiretoAoPonto.UoW.Api.Controllers
             {
                 return BadRequest(ex.Message);
             }
-
         }
+
     }
 }

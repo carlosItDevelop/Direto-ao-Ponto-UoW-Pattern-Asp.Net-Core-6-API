@@ -22,6 +22,7 @@ namespace Cooperchip.DiretoAoPonto.Data.Repositories.Implementations
         public async Task<bool> Commit()
         {
             return await _context.SaveChangesAsync() > 0;
+            // 
         }
 
         public Task Rollback()

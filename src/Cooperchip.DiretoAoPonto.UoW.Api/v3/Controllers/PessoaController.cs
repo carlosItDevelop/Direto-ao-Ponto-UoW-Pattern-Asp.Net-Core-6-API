@@ -2,24 +2,24 @@
 using Cooperchip.DiretoAoPonto.Data.Repositories.Abstraction;
 using Cooperchip.DiretoAoPonto.Data.Repositories.V2.Abstrations;
 using Cooperchip.DiretoAoPonto.Uow.Domain;
+using Cooperchip.DiretoAoPonto.UoW.Api.Controllers;
 using Cooperchip.DiretoAoPonto.UoW.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Cooperchip.DiretoAoPonto.UoW.Api.Controllers
+namespace Cooperchip.DiretoAoPonto.UoW.Api.v3.Controllers
 {
-    [ApiController]
-    [ApiVersion("1.0", Deprecated = true)]
-    [Route("api/v{version:apiVersion}/pessoa-v2")]
-    public class PessoaV2Controller : Controller
+    [ApiVersion("3.0")]
+    [Route("api/v{version:apiVersion}/pessoas")]
+    public class PessoaController : MainController
     {
         private readonly IUnitOfW _unitoW;
         private readonly IPessoaRepository _repoPessoa;
         private readonly IVooRepository _repoVoo;
         private readonly IMapper _mapper;
 
-        public PessoaV2Controller(IPessoaRepository repoPessoa,
+        public PessoaController(IPessoaRepository repoPessoa,
                                   IVooRepository repoVoo,
-                                  IMapper mapper, 
+                                  IMapper mapper,
                                   IUnitOfW unitoW)
         {
             _repoPessoa = repoPessoa;
