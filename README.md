@@ -24,6 +24,18 @@
 
 Torcemos para que gostem!
 
+---
+
+
+> Confira o Curso DIRETO AO PONTO - UnitOfWork, completo, com os vídeos:
+
+Menor preço da plataforma [Curso DIRETO AO PONTO - UnitOfWork](https://www.udemy.com/course/projeto-aspnet-core-6-web-api-foco-no-unit-of-work-pattern/?referralCode=28B9498F9020CE0C3ED6).
+
+
+> Aproveite e Confira o Curso Asp.Net Core Do Zero ao Ninja:
+
+Já são mais de 200 vídeos [Curso Asp.Net Core Do Zero ao Ninja](https://www.udemy.com/course/curso-de-aspnet-core-mvc-2-2-do-zero-ao-ninja/?referralCode=41B345D11D74CEDD7E57).
+
 
 ## Reporting security issues and bugs
 
